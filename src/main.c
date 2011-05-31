@@ -9,7 +9,10 @@ int main(int argc, char** argv) {
   char* filter_exp = 0;
   pcap_t* session = 0;
   bpf_u_int32 net, mask;
-  struct bpf_program filter;
+  if(geteuid() != 0) {
+    print_err("Error: This application must be run as root");
+    return USAGE_ERR;
+  }
   if(argc > 1) {
     /* if there are args, parse them */
     while((opt = getopt(argc, argv, optstring)) != -1) {
@@ -40,7 +43,6 @@ int main(int argc, char** argv) {
     print_err("Could not find device\n");
     return DEV_ERR;
   }
-
   /* get the netmask */
   get_pcap_netmask(device, &net, &mask);
   /* open a session */

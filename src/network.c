@@ -26,7 +26,12 @@ char* select_pcap_dev(void) {
  */
 pcap_t* open_pcap_session(char* dev) {
   char err[PCAP_ERRBUF_SIZE];
-  return pcap_open_live(dev, BUFSIZ, PROMISC_YES, STD_TIMEOUT, err);
+  pcap_t* session = 0;
+  if((session = pcap_open_live(dev, BUFSIZ, PROMISC_YES, STD_TIMEOUT, err)) == NULL) {
+    print_pcap_err("Failed to open session:", err);
+    return NULL;
+  }
+  return session;
 }
 
 int set_pcap_filter(pcap_t* session, char* regexp, bpf_u_int32 net) {
