@@ -4,7 +4,7 @@ sniffer: main.o network.o errors.o
 	$(CC) $(CFLAGS) main.o network.o errors.o -o sniffer
 
 clean:
-	rm -f *.o *.bak asgn2
+	rm -f *.o *.bak sniffer
 
 main.o: main.c
 	$(CC) $(CFLAGS) -O -c main.c

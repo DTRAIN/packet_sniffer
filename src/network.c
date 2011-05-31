@@ -81,18 +81,12 @@ void print_tcp_pkt(const struct ethernet_hdr* eth, const struct ip_hdr* ip,
 		   const struct tcp_hdr* tcp, const char* data) {
   printf("*********************CAPTURED PACKET*************************\n");
   printf("******************ETHERNET HEADER DATA***********************\n");
-  printf("SRC ADDRESS: %02x:%02x:%02x:%02x:%02x:%02x:%02x:%02x:%02x:%02x:%02x:%02x\n",
-	 eth->src_addr[0] >> 4, eth->src_addr[0] & 0x0f,
-	 eth->src_addr[1] >> 4, eth->src_addr[1] & 0x0f,
-	 eth->src_addr[2] >> 4, eth->src_addr[2] & 0x0f,
-	 eth->src_addr[3] >> 4, eth->src_addr[3] & 0x0f,
-	 eth->src_addr[4] >> 4, eth->src_addr[4] & 0x0f,
-	 eth->src_addr[5] >> 4, eth->src_addr[5] & 0x0f);
-  printf("DEST ADDRESS: %02x:%02x:%02x:%02x:%02x:%02x:%02x:%02x:%02x:%02x:%02x:%02x\n",
-	 eth->dest_addr[0] >> 4, eth->dest_addr[0] & 0x0f,
-	 eth->dest_addr[1] >> 4, eth->dest_addr[1] & 0x0f,
-	 eth->dest_addr[2] >> 4, eth->dest_addr[2] & 0x0f,
-	 eth->dest_addr[3] >> 4, eth->dest_addr[3] & 0x0f,
-	 eth->dest_addr[4] >> 4, eth->dest_addr[4] & 0x0f,
-	 eth->dest_addr[5] >> 4, eth->dest_addr[5] & 0x0f);
+  printf("SRC ADDRESS: %02x:%02x:%02x:%02x:%02x:%02x\n",
+	 eth->src_addr[0], eth->src_addr[1],
+	 eth->src_addr[2], eth->src_addr[3],
+	 eth->src_addr[4], eth->src_addr[5]);
+  printf("DEST ADDRESS: %02x:%02x:%02x:%02x:%02x:%02x\n",
+	 eth->dest_addr[0], eth->dest_addr[1],
+	 eth->dest_addr[2], eth->dest_addr[3],
+	 eth->dest_addr[4], eth->dest_addr[5]);
 }
