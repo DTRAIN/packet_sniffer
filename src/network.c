@@ -40,7 +40,7 @@ int set_pcap_filter(pcap_t* session, char* regexp, bpf_u_int32 net) {
     return -1;
   }
   if(pcap_compile(session, &fp, regexp,
-		  PCAP_COMP_NOOPTIMIZE, net) == -1) {
+                  PCAP_COMP_NOOPTIMIZE, net) == -1) {
     print_pcap_err("Invalid filter:", regexp);
     return -1;
   }
@@ -52,7 +52,7 @@ int set_pcap_filter(pcap_t* session, char* regexp, bpf_u_int32 net) {
 }
 
 void handle_pcap_pkt(u_char* args, const struct pcap_pkthdr* header,
-		     const u_char* packet) {
+                     const u_char* packet) {
   const struct ethernet_hdr* eth_header;
   const struct ip_hdr* ip_header;
   const struct tcp_hdr* tcp_header;
@@ -76,19 +76,26 @@ void handle_pcap_pkt(u_char* args, const struct pcap_pkthdr* header,
   print_tcp_pkt(eth_header, ip_header, tcp_header, pkt_data);
 }
 void print_tcp_pkt(const struct ethernet_hdr* eth, const struct ip_hdr* ip,
-		   const struct tcp_hdr* tcp, const char* data) {
-  printf("*********************CAPTURED PACKET*************************\n");
-  printf("******************ETHERNET HEADER DATA***********************\n");
+                   const struct tcp_hdr* tcp, const char* data) {
+  printf("*********************CAPTURED TCP PACKET*************************\n");
+  printf("********************ETHERNET HEADER DATA*************************\n");
   printf("SRC ADDRESS: %02x:%02x:%02x:%02x:%02x:%02x\n",
-	 eth->src_addr[0], eth->src_addr[1],
-	 eth->src_addr[2], eth->src_addr[3],
-	 eth->src_addr[4], eth->src_addr[5]);
+         eth->src_addr[0], eth->src_addr[1],
+         eth->src_addr[2], eth->src_addr[3],
+         eth->src_addr[4], eth->src_addr[5]);
   printf("DEST ADDRESS: %02x:%02x:%02x:%02x:%02x:%02x\n",
-	 eth->dest_addr[0], eth->dest_addr[1],
-	 eth->dest_addr[2], eth->dest_addr[3],
-	 eth->dest_addr[4], eth->dest_addr[5]);
-  printf("*******************IP HEADER DATA**************************\n");
-  printf("*******************TCP HEADER DATA*************************\n");
-  printf("*****************PACKET_PAYLOAD DATA***********************\n");
-
+         eth->dest_addr[0], eth->dest_addr[1],
+         eth->dest_addr[2], eth->dest_addr[3],
+         eth->dest_addr[4], eth->dest_addr[5]);
+  printf("PROTOCOL TYPE: Internet Protocol\n");
+  printf("*********************IP HEADER DATA****************************\n");
+  printf("VERSION: %02d\n", IP_VERSION(ip));
+  printf("TYPE OF SERVICE: %d\n", ip->tos);
+  printf("TOTAL LENGTH: %d\n", ip->len);
+  printf("REMAINING TTL: %d\n", ip->ttl);
+  printf("PROTOCOL: Transmission Control Protocol\n");
+  printf("SOURCE ADDRESS: %s\n", inet_ntoa(ip->src_ip));
+  printf("DEST ADDRESS: %s\n", inet_ntoa(ip->dest_ip));
+  printf("*********************TCP HEADER DATA***************************\n");
+  printf("*******************PACKET_PAYLOAD DATA*************************\n");
 }
