@@ -57,6 +57,7 @@ int main(int argc, char** argv) {
   if(filter_exp != NULL) {
     free(filter_exp);
   }
+  pcap_loop(session, -1, handle_pcap_pkt, NULL);
   /* close session for correct cleanup */
   pcap_close(session);
   return 0;
