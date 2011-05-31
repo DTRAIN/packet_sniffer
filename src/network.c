@@ -63,15 +63,13 @@ void handle_pcap_pkt(u_char* args, const struct pcap_pkthdr* header,
 
   eth_header = (struct ethernet_hdr*)(packet);
   ip_header = (struct ip_hdr*)(packet + SIZE_ETHERNET);
-  ip_hdr_sz = IP_HL(ip_header)*4;
+  ip_hdr_sz = IP_HDRLEN(ip_header)*4;
   if (ip_hdr_sz < 20) {
-    print_err("Invalid IP header length\n");
     return;
   }
   tcp_header = (struct tcp_hdr*)(packet + SIZE_ETHERNET + ip_hdr_sz);
-  tcp_hdr_sz = TH_OFF(tcp_header)*4;
+  tcp_hdr_sz = TCP_OFFSET(tcp_header)*4;
   if (tcp_hdr_sz < 20) {
-    print_err("Invalid TCP header length\n");
     return;
   }
   pkt_data = (char *)(packet + SIZE_ETHERNET + ip_hdr_sz + tcp_hdr_sz);
@@ -89,4 +87,8 @@ void print_tcp_pkt(const struct ethernet_hdr* eth, const struct ip_hdr* ip,
 	 eth->dest_addr[0], eth->dest_addr[1],
 	 eth->dest_addr[2], eth->dest_addr[3],
 	 eth->dest_addr[4], eth->dest_addr[5]);
+  printf("*******************IP HEADER DATA**************************\n");
+  printf("*******************TCP HEADER DATA*************************\n");
+  printf("*****************PACKET_PAYLOAD DATA***********************\n");
+
 }
