@@ -15,3 +15,5 @@ network.o: network.c
 errors.o: errors.c
 	$(CC) $(CFLAGS) -O -c errors.c
 
+calltables.o: calltables.c
+	$(CC) $(CFLAGS) -O -c calltables.c
