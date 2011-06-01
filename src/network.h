@@ -20,4 +20,6 @@ void handle_pcap_pkt(u_char* args, const struct pcap_pkthdr* header,
                      const u_char* packet);
 void print_tcp_pkt(const struct ethernet_hdr* eth, const struct ip_hdr* ip,
                    const struct tcp_hdr* tcp, const char* data);
+void print_udp_pkt(const struct ethernet_hdr* eth, const struct ip_hdr* ip,
+                   const struct udp_hdr* udp, const char* data);
 #endif

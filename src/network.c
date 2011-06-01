@@ -55,11 +55,9 @@ void handle_pcap_pkt(u_char* args, const struct pcap_pkthdr* header,
                      const u_char* packet) {
   const struct ethernet_hdr* eth_header;
   const struct ip_hdr* ip_header;
-  const struct tcp_hdr* tcp_header;
   const char* pkt_data;
   
   u_int ip_hdr_sz;
-  u_int tcp_hdr_sz;
 
   eth_header = (struct ethernet_hdr*)(packet);
   ip_header = (struct ip_hdr*)(packet + SIZE_ETHERNET);
@@ -67,13 +65,33 @@ void handle_pcap_pkt(u_char* args, const struct pcap_pkthdr* header,
   if (ip_hdr_sz < 20) {
     return;
   }
-  tcp_header = (struct tcp_hdr*)(packet + SIZE_ETHERNET + ip_hdr_sz);
-  tcp_hdr_sz = TCP_OFFSET(tcp_header)*4;
-  if (tcp_hdr_sz < 20) {
-    return;
-  }
-  pkt_data = (char *)(packet + SIZE_ETHERNET + ip_hdr_sz + tcp_hdr_sz);
-  print_tcp_pkt(eth_header, ip_header, tcp_header, pkt_data);
+
+	switch(ip_header->prot) {
+		case TCP_PACKET:
+			{
+				u_int tcp_hdr_sz;
+  			const struct tcp_hdr* tcp_header = (struct tcp_hdr*)(packet +
+																							 SIZE_ETHERNET + ip_hdr_sz);
+				tcp_hdr_sz = TCP_OFFSET(tcp_header)*4;
+				if (tcp_hdr_sz < 20) {
+					return;
+				}
+				pkt_data = (char*)(packet + SIZE_ETHERNET + ip_hdr_sz + tcp_hdr_sz);
+				print_tcp_pkt(eth_header, ip_header, tcp_header, pkt_data);
+			}
+			break;
+		case UDP_PACKET:
+			{
+				const struct udp_hdr* udp_header = (struct udp_hdr*)(packet + 
+																									SIZE_ETHERNET + ip_hdr_sz);
+				pkt_data = (char*)(packet + SIZE_ETHERNET + ip_hdr_sz + SIZE_UDP);
+				print_udp_pkt(eth_header, ip_header, udp_header, pkt_data);
+			}
+			break;
+		default:
+			print_err("Unrecognized Protocol\n");
+			return;
+	}
 }
 void print_tcp_pkt(const struct ethernet_hdr* eth, const struct ip_hdr* ip,
                    const struct tcp_hdr* tcp, const char* data) {
@@ -105,6 +123,34 @@ void print_tcp_pkt(const struct ethernet_hdr* eth, const struct ip_hdr* ip,
   printf("OFFSET: %d\n", TCP_OFFSET(tcp));
   printf("FLAGS: %d\n", tcp->flags);
   printf("WINDOW POSITION: %d\n",tcp->win);
+  printf("*******************PACKET_PAYLOAD DATA*************************\n");
+  printf("%s\n", data);
+}
+void print_udp_pkt(const struct ethernet_hdr* eth, const struct ip_hdr* ip,
+                   const struct udp_hdr* udp, const char* data) {
+  printf("*********************CAPTURED UDP PACKET*************************\n");
+  printf("********************ETHERNET HEADER DATA*************************\n");
+  printf("SRC ADDRESS: %02x:%02x:%02x:%02x:%02x:%02x\n",
+         eth->src_addr[0], eth->src_addr[1],
+         eth->src_addr[2], eth->src_addr[3],
+         eth->src_addr[4], eth->src_addr[5]);
+  printf("DEST ADDRESS: %02x:%02x:%02x:%02x:%02x:%02x\n",
+         eth->dest_addr[0], eth->dest_addr[1],
+         eth->dest_addr[2], eth->dest_addr[3],
+         eth->dest_addr[4], eth->dest_addr[5]);
+  printf("PROTOCOL TYPE: Internet Protocol\n");
+  printf("*********************IP HEADER DATA****************************\n");
+  printf("VERSION: %02d\n", IP_VERSION(ip));
+  printf("TYPE OF SERVICE: %d\n", ip->tos);
+  printf("TOTAL LENGTH: %d\n", ip->len);
+  printf("IDENTIFICATION: %d\n", ip->id);
+  printf("REMAINING TTL: %d\n", ip->ttl);
+  printf("PROTOCOL: User Datagram Protocol\n");
+  printf("SOURCE ADDRESS: %s\n", inet_ntoa(ip->src_ip));
+  printf("DEST ADDRESS: %s\n", inet_ntoa(ip->dest_ip));
+  printf("*********************UDP HEADER DATA***************************\n");
+  printf("SOURCE PORT: %d\n", udp->src_prt);
+  printf("DEST PORT: %d\n", udp->dest_prt);
   if(strlen(data) > 0) {
     printf("*******************PACKET_PAYLOAD DATA*************************\n");
     printf("%s\n", data);

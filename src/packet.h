@@ -5,8 +5,11 @@
 #include <sys/socket.h>
 #include <netinet/in.h>
 #include <arpa/inet.h>
+#define TCP_PACKET 6
+#define UDP_PACKET 17
 #define ETHER_ADDR_LEN	6
 #define SIZE_ETHERNET 14
+#define SIZE_UDP 8
 #define IP_HDRLEN(ip)		(((ip)->ver_hdrlen) & 0x0f)
 #define IP_VERSION(ip)		(((ip)->ver_hdrlen) >> 4)
 #define TCP_OFFSET(tcp)	        (((tcp)->off & 0xf0) >> 4)
@@ -53,5 +56,13 @@ struct tcp_hdr {
   u_short win;/* window */
   u_short chksum;/* checksum */
   u_short urg;/* urgent pointer */
+};
+
+/* UDP header */
+struct udp_hdr {
+	u_short src_prt;/* src port */
+	u_short dest_prt;/* dest port */
+	u_short length;/* total length */
+	u_short chksum;/* check sum */
 };
 #endif
