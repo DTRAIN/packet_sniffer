@@ -2,6 +2,7 @@
 #define NETWORK_H
 #include <stdio.h>
 #include <pcap.h>
+#include <string.h>
 #include "errors.h"
 #include "packet.h"
 #define STD_TIMEOUT 1000
@@ -16,7 +17,7 @@ char* select_pcap_dev(void);
 pcap_t* open_pcap_session(char* dev);
 int set_pcap_filter(pcap_t* session, char* regexp, bpf_u_int32 net);
 void handle_pcap_pkt(u_char* args, const struct pcap_pkthdr* header,
-		     const u_char* packet);
+                     const u_char* packet);
 void print_tcp_pkt(const struct ethernet_hdr* eth, const struct ip_hdr* ip,
-		   const struct tcp_hdr* tcp, const char* data);
+                   const struct tcp_hdr* tcp, const char* data);
 #endif

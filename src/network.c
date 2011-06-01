@@ -92,10 +92,21 @@ void print_tcp_pkt(const struct ethernet_hdr* eth, const struct ip_hdr* ip,
   printf("VERSION: %02d\n", IP_VERSION(ip));
   printf("TYPE OF SERVICE: %d\n", ip->tos);
   printf("TOTAL LENGTH: %d\n", ip->len);
+  printf("IDENTIFICATION: %d\n", ip->id);
   printf("REMAINING TTL: %d\n", ip->ttl);
   printf("PROTOCOL: Transmission Control Protocol\n");
   printf("SOURCE ADDRESS: %s\n", inet_ntoa(ip->src_ip));
   printf("DEST ADDRESS: %s\n", inet_ntoa(ip->dest_ip));
   printf("*********************TCP HEADER DATA***************************\n");
-  printf("*******************PACKET_PAYLOAD DATA*************************\n");
+  printf("SOURCE PORT: %d\n", tcp->src_prt);
+  printf("DEST PORT: %d\n", tcp->dest_prt);
+  printf("SEQUENCE #: %d\n", ntohl(tcp->seq));
+  printf("ACK #: %d\n", ntohl(tcp->ack));
+  printf("OFFSET: %d\n", TCP_OFFSET(tcp));
+  printf("FLAGS: %d\n", tcp->flags);
+  printf("WINDOW POSITION: %d\n",tcp->win);
+  if(strlen(data) > 0) {
+    printf("*******************PACKET_PAYLOAD DATA*************************\n");
+    printf("%s\n", data);
+  }
 }
