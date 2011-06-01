@@ -54,4 +54,8 @@ struct tcp_hdr {
   u_short chksum;/* checksum */
   u_short urg;/* urgent pointer */
 };
+/*union protocol_header {
+  struct tcp_hdr;
+  struct udp_hdr;
+};*/
 #endif

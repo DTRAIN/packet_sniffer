@@ -1,7 +1,7 @@
 CC=gcc
 CFLAGS=-Wall -ggdb -lpcap
-sniffer: main.o network.o errors.o
-	$(CC) $(CFLAGS) main.o network.o errors.o -o sniffer
+sniffer: main.o network.o errors.o calltables.o
+	$(CC) $(CFLAGS) main.o network.o errors.o calltables.o -o sniffer
 
 clean:
 	rm -f *.o *.bak sniffer

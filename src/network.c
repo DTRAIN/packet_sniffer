@@ -1,4 +1,5 @@
 #include "network.h"
+#include "externs.h"
 void get_pcap_netmask(char* device, bpf_u_int32* net, bpf_u_int32* mask) {
   char err[PCAP_ERRBUF_SIZE];
   if (pcap_lookupnet(device, net, mask, err) == -1) {
@@ -73,7 +74,12 @@ void handle_pcap_pkt(u_char* args, const struct pcap_pkthdr* header,
     return;
   }
   pkt_data = (char *)(packet + SIZE_ETHERNET + ip_hdr_sz + tcp_hdr_sz);
-  print_tcp_pkt(eth_header, ip_header, tcp_header, pkt_data);
+  if(ip_suite[ip_header->prot] != 0) {
+    ((void(*)(const struct ethernet_hdr*, const struct ip_hdr*, 
+	const struct tcp_hdr*, const char*))ip_suite[ip_header->prot])(eth_header, ip_header,
+	 tcp_header, pkt_data);
+  }
+  //print_tcp_pkt(eth_header, ip_header, tcp_header, pkt_data);
 }
 void print_tcp_pkt(const struct ethernet_hdr* eth, const struct ip_hdr* ip,
                    const struct tcp_hdr* tcp, const char* data) {

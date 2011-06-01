@@ -1,5 +1,7 @@
 #include <unistd.h>
 #include <string.h>
+#include "calltables.h"
+#include "externs.h"
 #include "network.h"
 #include "errors.h"
 int main(int argc, char** argv) {
@@ -9,6 +11,7 @@ int main(int argc, char** argv) {
   char* filter_exp = 0;
   pcap_t* session = 0;
   bpf_u_int32 net, mask;
+  setup_basic_ip_calls();
   if(geteuid() != 0) {
     print_err("Error: This application must be run as root");
     return USAGE_ERR;
