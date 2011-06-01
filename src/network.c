@@ -42,11 +42,11 @@ int set_pcap_filter(pcap_t* session, char* regexp, bpf_u_int32 net) {
   if(pcap_compile(session, &fp, regexp,
                   PCAP_COMP_NOOPTIMIZE, net) == -1) {
     print_pcap_err("Invalid filter:", regexp);
-    return -1;
+    exit(FILTER_ERR);
   }
   if(pcap_setfilter(session, &fp) == -1) {
     print_err("Failed to set filter");
-    return -1;
+    exit(FILTER_ERR);
   }
   return 1;
 }
