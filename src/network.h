@@ -18,8 +18,7 @@ pcap_t* open_pcap_session(char* dev);
 int set_pcap_filter(pcap_t* session, char* regexp, bpf_u_int32 net);
 void handle_pcap_pkt(u_char* args, const struct pcap_pkthdr* header,
                      const u_char* packet);
-void print_tcp_pkt(const struct ethernet_hdr* eth, const struct ip_hdr* ip,
-                   const struct tcp_hdr* tcp, const char* data);
-void print_udp_pkt(const struct ethernet_hdr* eth, const struct ip_hdr* ip,
-                   const struct udp_hdr* udp, const char* data);
+void print_pkt(const struct ethernet_hdr* eth, const struct ip_hdr* ip, 
+               u_int ip_hdr_sz, const void* packet);
+void format_data(char* data, u_short len);
 #endif

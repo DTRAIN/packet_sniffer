@@ -17,20 +17,20 @@ int main(int argc, char** argv) {
     /* if there are args, parse them */
     while((opt = getopt(argc, argv, optstring)) != -1) {
       switch(opt) {
-	/* user specified filter */
+        /* user specified filter */
       case 'f':
-	filter_exp = (char*)malloc(MAX_FILTER_LENGTH);
-	memmove(filter_exp, optarg, MAX_FILTER_LENGTH);
-	break;
-	/* user specified device */
+        filter_exp = (char*)malloc(MAX_FILTER_LENGTH);
+        memmove(filter_exp, optarg, MAX_FILTER_LENGTH);
+        break;
+        /* user specified device */
       case 'd':
-	device = (char*)malloc(MAX_DEV_LENGTH);
-	memmove(device, optarg, MAX_DEV_LENGTH);
-	break;
-	/* someone entered a wrong argument */
+        device = (char*)malloc(MAX_DEV_LENGTH);
+        memmove(device, optarg, MAX_DEV_LENGTH);
+        break;
+        /* someone entered a wrong argument */
       default:
-	print_err("Usage: ./sniffer [-d device] [-f filter]");
-	return USAGE_ERR;
+        print_err("Usage: ./sniffer [-d device] [-f filter]");
+        return USAGE_ERR;
       }
     }
   }
@@ -57,6 +57,7 @@ int main(int argc, char** argv) {
   if(filter_exp != NULL) {
     free(filter_exp);
   }
+  //loop infinitely
   pcap_loop(session, -1, handle_pcap_pkt, NULL);
   /* close session for correct cleanup */
   pcap_close(session);
